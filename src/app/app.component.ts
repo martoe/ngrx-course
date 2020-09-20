@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
 import * as AuthActions from './auth/actions/auth.actions';
 import * as AuthSelectors from './auth/selectors/auth.selectors';
+import {User} from './auth/model/user.model';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    const userProfile = localStorage.getItem('user');
+    if (userProfile) {
+      const user: User = JSON.parse(userProfile);
+      this.store.dispatch(AuthActions.login({user}));
+    }
     this.router.events.subscribe(event => {
       switch (true) {
         case event instanceof NavigationStart: {
